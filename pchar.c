@@ -5,27 +5,29 @@
  * @line_number: The Line Number
  * Return:Void
  */
-void pchar_monty(stack_t **stack, unsigned int line_number)
+void pchar(stack_t **head, unsigned int line_number, code_args_t token)
 {
-	stack_t *head = *stack;
-	(void)line_number;
 
-	if (*stack == NULL)
-		pchar_error();
-	if (head->n >= 65 && head->n <= 90)
+	stack_t *_head = *head;
+
+	if (token.args)
+		free(token.args);
+	/*Incase there is no node to be printed*/
+	if (!_head)
 	{
-		putchar(head->n);
-		putchar('\n');
+		dprintf(2, "L%u: can't pchar, stack empty\n", line_number);
+		exit(EXIT_FAILURE);
+
 	}
-	else if (head->n >= 97 && head->n <= 122)
+	/*handle if isn't a non printable character*/
+	if (_head->n < 0 || _head->n > 127)
 	{
-		putchar(head->n);
-		putchar('\n');
+
+		dprintf(2, "L%u: can't pchar, value out of range\n", line_number);
+		exit(EXIT_FAILURE);
 	}
-	else
-	{
-		pchar_error_2();
-	}
+	/*if everything went well print to stdout*/
+	printf("%c\n", _head->n);
 }
 /**
  * pchar_error - error in case of empty stack

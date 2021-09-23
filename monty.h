@@ -1,10 +1,18 @@
-#ifndef MONTY_H
-#define MONTY_H
+#ifndef _MONTY_H_
+#define _MONTY_H_
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <ctype.h>
+
+#define DELIMITER " \n\t\a"
+#define LIFO 1
+#define FIFO 0
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -37,69 +45,100 @@ typedef struct instruction_s
 } instruction_t;
 
 /**
- * struct arguments - Values to be accessed by various functions
- * @argv: Name of the executable
- * @counter: counts number of lines
- * @line: input line
- * @stack: doubly linked list
- * @file: file
- * @order: FIFO or LIFO
+ * struct info_s - Data From The Monty File
+ * @cmd: Line From File
+ * @arg: Argument To Excute
+ * @l_number: Line Number
+ * @fp: File Descriptor
+ * @fn: File Name
+ * @type: FIFO LIFO
+ * Description: Information About The Commands In The Monty File
  */
-typedef struct arguments
+typedef struct info_s
 {
-	char **argv;
-	ssize_t counter;
-	char *line;
-	stack_t *stack;
-	FILE *file;
-	int order;
-} args_t;
+	char *cmd;
+	char **arg;
+	char *fn;
+	int l_number;
+	FILE *fp;
+	int type;
+} info_t;
+extern info_t info;
+/**
+ * struct error - print error to stderr
+ * @out:error code
+ * @error_type:function to handle error
+ */
+typedef struct error
+{
+	int out;
+	void (*error_type)(void);
+} error_t;
 
-/* str-ops functions start */
-void pchar(stack_t **stack, unsigned int line_number);
-void pstr(stack_t **stack, unsigned int line_number);
-void nop(stack_t **stack, unsigned int line_number);
-void rotl(stack_t **stack, unsigned int line_number);
-void rotr(stack_t **stack, unsigned int line_number);
-/* str-ops functions end*/
+/********* Error-Handler**********/
 
-/* opcodes functions start */
-void push(stack_t **stack, unsigned int line_number);
-void pall(stack_t **stack, unsigned int line_number);
-void pop(stack_t **stack, unsigned int line_number);
-void pint(stack_t **stack, unsigned int line_number);
-void swap(stack_t **stack, unsigned int line_number);
-/* opcodes functions end*/
+void handle_error(int code);
+void malloc_fail(void);
+void monty_usage(void);
+void push_use(void);
+void unknown_command(void);
+void file_perm(void);
+void pint_error(void);
+void pop_error(void);
+void swap_error(void);
+void add_error(void);
+void sub_error(void);
+void div_error(void);
+void _zero(void);
+void mul_error(void);
+void mod_error(void);
+void pchar_error(void);
+void pchar_error_2(void);
 
-/* interpreter functions start */
-void monty(void);
-void caller(void);
-void cleaner(void);
-stack_t *add_dnodeint_end(stack_t **head, const int n);
-/* interpreter functions end*/
 
-/* interpreter-ii functions start */
-void stack(stack_t **stack, unsigned int line_number);
-void queue(stack_t **stack, unsigned int line_number);
-/* interpreter-ii functions end*/
 
-/* math-ops functions start */
-void add(stack_t **stack, unsigned int line_number);
-void sub(stack_t **stack, unsigned int line_number);
-void divide(stack_t **stack, unsigned int line_number);
-void mul(stack_t **stack, unsigned int line_number);
-void mod(stack_t **stack, unsigned int line_number);
-/* math-ops functions end*/
 
-/* linkedlist functions start */
-stack_t *add_dnodeint(stack_t **head, const int n);
-size_t print_dlistint(const stack_t *h);
-int delete_dnodeint_at_index(stack_t **head, unsigned int index);
-void free_dlistint(stack_t *head);
-size_t stack_size(const stack_t *h);
-int check_string(char *s);
-/* linkedlist functions end*/
+/****** Engine *****/
 
-extern args_t args;
+int treat_monty(char *filename);
+int split(void);
+int excute_monty(stack_t **stack);
 
-#endif /* ifndef MONTY_H*/
+/***** Monty-Command******/
+
+void push_monty(stack_t **stack, unsigned int line_number);
+void pall_monty(stack_t **stack, unsigned int line_number);
+void pint_monty(stack_t **stack, unsigned int line_number);
+void pop_monty(stack_t **stack, unsigned int line_number);
+void swap_monty(stack_t **stack, unsigned int line_number);
+void add_monty(stack_t **stack, unsigned int line_number);
+void nop_monty(stack_t **stack, unsigned int line_number);
+void sub_monty(stack_t **stack, unsigned int line_number);
+void div_monty(stack_t **stack, unsigned int line_number);
+void mul_monty(stack_t **stack, unsigned int line_number);
+void mod_monty(stack_t **stack, unsigned int line_number);
+void pchar_monty(stack_t **stack, unsigned int line_number);
+void pstr_monty(stack_t **stack, unsigned int line_number);
+void rotr_monty(stack_t **stack, unsigned int line_number);
+void rotl_monty(stack_t **stack, unsigned int line_number);
+void _queue(stack_t **stack, unsigned int line_number);
+void _stack(stack_t **stack, unsigned int line_number);
+
+
+/****** Helpers *********/
+
+void free_info(void);
+void free_list(stack_t *stack);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+char *_memcpy(char *dest, char *src, unsigned int n);
+void *fill_an_array(void *a, int el, unsigned int len);
+int _isdigit(char *str);
+int dlistint_len(stack_t *stack);
+int delete_dnodeint_at_index(stack_t **head, int index);
+void add_node_fifo(stack_t **stack, stack_t *new_node);
+void add_node_lifo(stack_t **stack, stack_t *new_node);
+
+
+
+
+#endif

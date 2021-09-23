@@ -1,28 +1,18 @@
-
 #include "monty.h"
-
-args_t args;
-
 /**
- * main - entry point
- * @argc: number of arguments
- * @argv: array of argc
- * Return: success on exit, exit failure otherwise
+ * main - an interpreter for Monty ByteCodes files.
+ * @argc: Argument Count
+ * @argv: Argument Value
+ * Return: Exit_Succes(0) or Exit_Failure(1)
  */
 int main(int argc, char **argv)
 {
+	info.type = LIFO;
 	if (argc != 2)
+		handle_error(2);
+	else
 	{
-		fprintf(stderr, "USAGE: monty file\n");
-		exit(EXIT_FAILURE);
+	treat_monty(argv[1]);
 	}
-	args.argv = argv;
-	args.counter = 0;
-	args.line = NULL;
-	args.stack = NULL;
-	args.file = NULL;
-	args.order = 1;
-	monty();
-	free_dlistint(args.stack);
 	return (EXIT_SUCCESS);
 }

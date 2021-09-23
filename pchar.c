@@ -1,5 +1,5 @@
 #include "monty.h"
-/**
+/*
  * pchar_monty -  prints the char at the top of the stack
  * @stack: Pointer To The head
  * @line_number: The Line Number
@@ -27,7 +27,7 @@ void pchar_monty(stack_t **stack, unsigned int line_number)
 		pchar_error_2();
 	}
 }
-/**
+/*
  * pchar_error - error in case of empty stack
  */
 void pchar_error(void)
@@ -36,7 +36,7 @@ void pchar_error(void)
 	free_info();
 	exit(EXIT_FAILURE);
 }
-/**
+/*
  * pchar_error_2 - error in case value out of range
  */
 void pchar_error_2(void)

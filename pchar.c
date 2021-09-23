@@ -7,19 +7,25 @@
  */
 void pchar_monty(stack_t **stack, unsigned int line_number)
 {
-	if ((*stack)->next == NULL)
-	{
-		set_op_tok_error(pchar_error(line_number, "stack empty"));
-		return;
-	}
-	if ((*stack)->next->n < 0 || (*stack)->next->n > 127)
-	{
-		set_op_tok_error(pchar_error(line_number,
-					     "value out of range"));
-		return;
-	}
+	stack_t *head = *stack;
+	(void)line_number;
 
-	printf("%c\n", (*stack)->next->n);
+	if (*stack == NULL)
+		pchar_error();
+	if (head->n >= 65 && head->n <= 90)
+	{
+		putchar(head->n);
+		putchar('\n');
+	}
+	else if (head->n >= 97 && head->n <= 122)
+	{
+		putchar(head->n);
+		putchar('\n');
+	}
+	else
+	{
+		pchar_error_2();
+	}
 }
 /**
  * pchar_error - error in case of empty stack

@@ -1,4 +1,5 @@
 #include "monty.h"
+#include <stdio.h>
 info_t info;
 /**
  * treat_monty - Treat The Monty File
@@ -15,7 +16,7 @@ int treat_monty(char *filename)
 	info.fp = fopen(info.fn, "r");
 	if (info.fp == NULL)
 		handle_error(3);
-	while ((n_r = getline(&info.cmd, &len, info.fp)) > 0)
+	while ((n_r = fgets(&info.cmd, &len, info.fp)) > 0)
 	{
 		if (*info.cmd == '\n')
 			continue;
